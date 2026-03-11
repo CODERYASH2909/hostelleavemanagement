@@ -24,7 +24,8 @@
             min-height: 100vh;
             font-family: Arial, sans-serif;
             color: white;
-            background: linear-gradient(rgba(58, 56, 56, 0.6)),url("{% static 'images/guni_campus.png' %}");
+            /* background: linear-gradient(rgba(21, 1, 1, 0.075)),url("{% static 'images/guni_campus.png' %}"); */
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),url("{% static 'images/guni_campus.png' %}");
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -38,11 +39,11 @@
         }
 
         .logo {
-            width: 300px;
+            width: 400px;
             max-width: 80%;
             height:100px;
             margin-bottom: 8px;
-            background: linear-gradient(rgba(108, 104, 104, 0.6))
+            background: linear-gradient(rgba(120, 114, 114, 0.6), rgba(42, 38, 38, 1)),url("{% static 'images/logo.png' %}");
         }
 
         .main-container {
@@ -73,8 +74,24 @@
             display: block;
         }
 
-        .role:hover {
+        /* .role:hover {
             transform: scale(1.05);
+        } */
+         .student:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to top , black , blue);
+        }
+        .rector:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to top , black , #11673f);
+        }
+        .proctor:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to top , black , #cd6511);
+        }
+        .hod:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to top , black , rgb(255, 0, 200));
         }
 
         .student { background: #0d6efd; }
@@ -88,6 +105,7 @@
             font-size: 14px;
         }
         .hod { background: #df3be1; }
+        
 
         @media (max-width: 768px) {
             body {
@@ -113,7 +131,7 @@
 <div class="container main-container">
 
     <h1 class="fw-bold">Hostel Leave Management System</h1>
-    <p>Manage hostel leave applications easily and securely</p>
+    <p style="color:rgb(158, 161, 177); font-family: Verdana, Geneva, Tahoma, sans-serif ; ">Manage hostel leave applications easily and securely</p>
 
     <div class="row justify-content-center w-100">
     <!-- Student -->
