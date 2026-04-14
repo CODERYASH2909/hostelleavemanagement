@@ -164,10 +164,10 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <a href="#" class="active">Dashboard</a>
-            <a href="#">Apply Leave</a>
-            <a href="#">Track Leave</a>
-            <a href="#">Leave History</a>
-            <a href="#">Logout</a>
+            <a href="{% url 'apply_leave' %}" class="btn btn-primary">Apply Leave</a>
+            <a href="{% url 'track_leave' %}" class="btn btn-primary" >Track Leave</a>
+            <a href="{% url 'leave_history' %}" class="btn btn-primary">Leave History</a>
+            <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
         </div>
 
         <!-- Main Content -->

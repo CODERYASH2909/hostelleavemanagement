@@ -1,1 +1,6 @@
 settings.py
+env/
+venv/
+.venv/
+__pycache__/
+*.pyc
