@@ -1,193 +1,282 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Leave Application Form</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta charset="UTF-8">
+    <title>Apply Leave - Student Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body{
-            background: linear-gradient(to right,#16222a,#3a6073);
-            font-family: Arial, sans-serif;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        .main-container{
-            max-width: 1000px;
-            margin: 40px auto;
+        body {
+            background-color: #f4f6f9;
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            width: 100%;
+            height: 60px;
+            background: #1e293b;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .top-navbar h2 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .top-navbar .profile {
+            cursor: pointer;
+        }
+
+        /* Layout */
+        .dashboard-container {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            height: calc(100vh - 60px);
+            background: #0f172a;
+            padding-top: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #cbd5e1;
+            padding: 12px 20px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #1e293b;
+            color: white;
+            text-decoration: none;
+        }
+
+        .sidebar a.active {
+            background: #2563eb;
+            color: white !important;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            height: calc(100vh - 60px);
+        }
+
+        /* Form Styles */
+        .form-container {
             background-color: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .section-title{
+        .section-title {
             font-weight: bold;
-            margin-bottom: 15px;
-            color: #3a6073;
-            border-left: 4px solid #3a6073;
-            padding-left: 8px;
+            margin-bottom: 20px;
+            color: #1e293b;
+            border-left: 4px solid #2563eb;
+            padding-left: 10px;
+            font-size: 1.2rem;
+            margin-top: 20px;
         }
 
-        .btn-submit{
-            background-color: #3a6073;
+        .btn-submit {
+            background-color: #2563eb;
             color: white;
-            padding: 8px 30px;
+            padding: 10px 30px;
             border: none;
             border-radius: 5px;
+            transition: background 0.3s;
         }
 
-        .btn-submit:hover{
-            background-color: #16222a;
+        .btn-submit:hover {
+            background-color: #1d4ed8;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="main-container">
-
-    <!-- LOGO IMAGE  -->
-    <div class="text-center mb-3">
-        <img src="{% static 'images/logo.png' %}" width="200" alt="University Logo">
+    <!-- Navbar -->
+    <div class="top-navbar">
+        <h2>College Leave Management</h2>
+        <div class="profile">Student | Logout</div>
     </div>
 
-    <div class="text-center mb-4">
-        <h3>Leave Application Form</h3>
-        <p>(Only for Hosteller)</p>
-    </div>
+    <div class="dashboard-container">
 
-    <!-- Form Submit -->
-    <form method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
-
-    <!-- ================= STUDENT DETAILS ================= -->
-    <div class="student-details mb-4">
-        <div class="section-title">Student Details</div>
-
-        <div class="row">
-
-            <div class="col-md-6 mb-3">
-                <label>Full Name *</label>
-                <input type="text" name="name" class="form-control" required>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Enrollment Number *</label>
-                <input type="text" name="enrollment" class="form-control" required>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Hostel Name *</label>
-                <select name="hostel" class="form-select" required>
-                    <option disabled selected>-- Choose Hostel --</option>
-                    <option>Hostel Block A</option>
-                    <option>Hostel Block B</option>
-                    <option>Hostel Block C</option>
-                    <option>Hostel Block D</option>
-                    <option>Hostel Block E</option>
-                    <option>Hostel Block F</option>
-                    <option>Hostel Block G</option>
-                    <option>Hostel Block H</option>
-                </select>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Room Number *</label>
-                <input type="text" name="room" class="form-control" required>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Student Contact *</label>
-                <input type="tel" name="student_contact" class="form-control" required>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Student Email *</label>
-                <input type="email" name="student_email" class="form-control" required>
-            </div>
-
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="{% url 'student' %}">Dashboard</a>
+            <a href="{% url 'apply_leave' %}" class="active">Apply Leave</a>
+            <a href="{% url 'track_leave' %}">Track Leave</a>
+            <a href="{% url 'leave_history' %}">Leave History</a>
+            <a href="{% url 'logout' %}">Logout</a>
         </div>
-    </div>
-    <div class="col-md-6 mb-3">
-        <label>Parent / Guardian Name *</label>
-        <input type="text" name="parent_name" class="form-control" required>
-    </div>
-    <div class="col-md-6 mb-3">
-        <label>Parent / Guardian Phone *</label>
-        <input type="tel" name="parent_phone" class="form-control" required>
-    </div>
 
-    <!-- ================= LEAVE DETAILS ================= -->
-    <div class="leave-details mb-4">
-        <div class="section-title">Leave Details</div>
+        <!-- Main Content -->
+        <div class="main-content">
+            
+            <div class="form-container">
+                <div class="text-center mb-3">
+                    <img src="{% static 'images/logo.png' %}" width="150" alt="University Logo">
+                </div>
+                <div class="text-center mb-4">
+                    <h3>Leave Application Form</h3>
+                    <p class="text-muted">(Only for Hosteller)</p>
+                </div>
 
-        <div class="row">
+                <!-- Form Submit -->
+                <form method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
 
-            <div class="col-md-6 mb-3">
-                <label>Start Date *</label>
-                <input type="date" name="from_date" class="form-control" required>
+                    <!-- ================= STUDENT DETAILS ================= -->
+                    <div class="section-title">Student Details</div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Enrollment Number *</label>
+                            <input type="text" name="enrollment" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hostel Name *</label>
+                            <select name="hostel" class="form-select" required>
+                                <option disabled selected value="">-- Choose Hostel --</option>
+                                <option>Hostel Block A</option>
+                                <option>Hostel Block B</option>
+                                <option>Hostel Block C</option>
+                                <option>Hostel Block D</option>
+                                <option>Hostel Block E</option>
+                                <option>Hostel Block F</option>
+                                <option>Hostel Block G</option>
+                                <option>Hostel Block H</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Room Number *</label>
+                            <input type="text" name="room" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Student Contact *</label>
+                            <input type="tel" name="student_contact" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Student Email *</label>
+                            <input type="email" name="student_email" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Parent / Guardian Name *</label>
+                            <input type="text" name="parent_name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Parent / Guardian Phone *</label>
+                            <input type="tel" name="parent_phone" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- ================= LEAVE DETAILS ================= -->
+                    <div class="section-title">Leave Details</div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Start Date *</label>
+                            <input type="date" name="from_date" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">End Date *</label>
+                            <input type="date" name="to_date" class="form-control" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Travel Mode *</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="travel_mode" value="Bus" required>
+                                <label class="form-check-label">Bus</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="travel_mode" value="Train">
+                                <label class="form-check-label">Train</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="travel_mode" value="Flight">
+                                <label class="form-check-label">Flight</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="travel_mode" value="Own Vehicle">
+                                <label class="form-check-label">Own Vehicle</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Address During Leave *</label>
+                            <textarea name="leave_address" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">City / State / PIN *</label>
+                            <input type="text" name="city_state_pin" class="form-control" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Reason *</label>
+                            <textarea name="reason" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- ================= SUBMIT ================= -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn-submit">Submit Leave Request</button>
+                    </div>
+
+                </form>
             </div>
-
-            <div class="col-md-6 mb-3">
-                <label>End Date *</label>
-                <input type="date" name="to_date" class="form-control" required>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Travel Mode *</label><br>
-
-                <input type="radio" name="travel_mode" value="Bus" required> Bus
-                <input type="radio" name="travel_mode" value="Train"> Train
-                <input type="radio" name="travel_mode" value="Flight"> Flight
-                <input type="radio" name="travel_mode" value="Own Vehicle"> Own Vehicle
-            </div>
-
-            <div class="col-md-12 mb-3">
-                <label>Address During Leave *</label>
-                <textarea name="leave_address" class="form-control" rows="2" required></textarea>
-            </div>
-
-            <div class="col-md-12 mb-3">
-                <label>City / State / PIN *</label>
-                <input type="text" name="city_state_pin" class="form-control" required>
-            </div>
-
-            <div class="col-md-12 mb-3">
-                <label>Reason *</label>
-                <textarea name="reason" class="form-control" rows="3" required></textarea>
-            </div>
-
+            
         </div>
+
     </div>
 
-    <!-- ================= SUBMIT ================= -->
-    <div class="text-center">
-        <button type="submit" class="btn-submit">Submit Leave Request</button>
-    </div>
-
-    </form>
-
-</div>
-
-<!-- Bootstrap Validation Script -->
-<script>
-(function () {
-'use strict'
-var forms = document.querySelectorAll('.needs-validation')
-Array.prototype.slice.call(forms)
-.forEach(function (form) {
-form.addEventListener('submit', function (event) {
-if (!form.checkValidity()) {
-event.preventDefault()
-event.stopPropagation()
-}
-form.classList.add('was-validated')
-}, false)
-})
-})()
-</script>
+    <!-- Bootstrap Validation Script -->
+    <script>
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+    </script>
 
 </body>
 </html>
