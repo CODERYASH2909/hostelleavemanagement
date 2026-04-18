@@ -1,0 +1,568 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rector Dashboard - Leave Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts for Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS reset & variables */
+        :root {
+            --primary: #1e293b;
+            --secondary: #334155;
+            --accent: #4338ca;
+            --bg-color: #f1f5f9;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Top Navbar */
+        .navbar-custom {
+            width: 100%;
+            height: 70px;
+            background: var(--primary);
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar-custom h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-custom .profile {
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            color: #fca5a5;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            padding-left: 10px;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logout-btn:hover {
+            color: #ef4444;
+        }
+
+        /* Layout Container */
+        .dashboard-container {
+            display: flex;
+            margin-top: 70px;
+            /* Offset for fixed navbar */
+            height: calc(100vh - 70px);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background: var(--primary);
+            padding-top: 30px;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            position: fixed;
+            left: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: #94a3b8;
+            padding: 16px 30px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .sidebar a:hover::before {
+            background: var(--accent);
+        }
+
+        .sidebar a.active {
+            background: rgba(67, 56, 202, 0.15);
+            color: white !important;
+            border-radius: 0 8px 8px 0;
+            margin-right: 15px;
+        }
+
+        .sidebar a.active::before {
+            background: var(--accent);
+        }
+
+        /* Main Content Panel */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            margin-left: 260px;
+            /* Offset for fixed sidebar */
+            width: calc(100% - 260px);
+            background-color: var(--bg-color);
+            overflow-y: auto;
+        }
+
+        /* Stat Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 6px;
+        }
+
+        .stat-card.total::before {
+            background: #6366f1;
+        }
+
+        .stat-card.pending::before {
+            background: var(--warning);
+        }
+
+        .stat-card.approved::before {
+            background: var(--success);
+        }
+
+        .stat-card.rejected::before {
+            background: var(--danger);
+        }
+
+        .stat-card h3 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin: 0;
+        }
+
+        /* Tables & Cards */
+        .content-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            margin-bottom: 40px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .section-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 10px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 16px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-approve {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-approve:hover {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-reject {
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-reject:hover {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Badges */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: #b45309;
+        }
+
+        .status-approved {
+            background: rgba(16, 185, 129, 0.15);
+            color: #047857;
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.15);
+            color: #b91c1c;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .sidebar a {
+                padding: 15px;
+                justify-content: center;
+            }
+
+            .sidebar a span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .navbar-custom {
+                padding: 0 20px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navbar -->
+    <div class="navbar-custom">
+        <h2>Rector Dashboard</h2>
+        <div class="profile">
+            <span>Welcome, <strong>{{ request.user.username }}</strong></span>
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <!-- Layout Container -->
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="#" class="active">
+                <span style="font-size: 18px; margin-right: 12px;">📊</span> <span>Dashboard Overview</span>
+            </a>
+            <a href="#pending-approvals">
+                <span style="font-size: 18px; margin-right: 12px;">⏳</span> <span>Final Approvals</span>
+            </a>
+            <a href="#recent-history">
+                <span style="font-size: 18px; margin-right: 12px;">🕒</span> <span>Recent History</span>
+            </a>
+
+            <div style="flex: 1;"></div>
+
+            <a href="{% url 'logout' %}" style="color: #ef4444; border-top: 1px solid rgba(255,255,255,0.05);">
+                <span style="font-size: 18px; margin-right: 12px;">🚪</span> <span>Sign Out</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card total">
+                    <h3>{{ total|default:"0" }}</h3>
+                    <p>Total Requests</p>
+                </div>
+
+                <div class="stat-card pending">
+                    <h3>{{ pending|default:"0" }}</h3>
+                    <p>Pending Approvals</p>
+                </div>
+
+                <div class="stat-card approved">
+                    <h3>{{ approved|default:"0" }}</h3>
+                    <p>Approved Leaves</p>
+                </div>
+
+                <div class="stat-card rejected">
+                    <h3>{{ rejected|default:"0" }}</h3>
+                    <p>Rejected Leaves</p>
+                </div>
+            </div>
+
+            <!-- Approvals Table Section -->
+            <div class="content-card" id="pending-approvals">
+                <div class="section-header">
+                    <h3>Pending Final Approvals</h3>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Reason</th>
+                                <th style="text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in pending_final %}
+                            <tr>
+                                <td><strong>{{ leave.student.full_name|default:leave.student.name }}</strong></td>
+                                <td>{{ leave.from_date }}</td>
+                                <td>{{ leave.to_date }}</td>
+                                <td style="max-width: 300px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
+                                    title="{{ leave.reason }}">
+                                    {{ leave.reason }}
+                                </td>
+                                <td style="text-align: center;">
+                                    <div style="display: flex; gap: 10px; justify-content: center;">
+                                        <form method="POST" action="{% url 'rector_approve' leave.id %}"
+                                            style="margin: 0;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-action btn-approve">
+                                                <span>✓</span> Approve
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{% url 'rector_reject' leave.id %}"
+                                            style="margin: 0;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-action btn-reject">
+                                                <span>✕</span> Reject
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    🎉 No pending final approvals at the moment. You're all caught up!
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- History Table Section -->
+            <div class="content-card" id="recent-history">
+                <div class="section-header">
+                    <h3>Recent History</h3>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>From Date</th>
+                                <th>To Date</th>
+                                <th>Final Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in history %}
+                            <tr>
+                                <td><strong>{{ leave.student.name|default:leave.student.full_name }}</strong></td>
+                                <td>{{ leave.from_date }}</td>
+                                <td>{{ leave.to_date }}</td>
+                                <td>
+                                    <span class="status-badge status-{{ leave.status|lower }}">
+                                        {{ leave.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="empty-state">
+                                    No history records found in the database.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div> <!-- End Main Content -->
+    </div> <!-- End Dashboard Container -->
+
+</body>
+
+</html>
