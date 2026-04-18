@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HOD Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+
+        body { background:#f1f5f9; }
+
+        .navbar {
+            height:60px;
+            background:#111827;
+            color:white;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:0 20px;
+        }
+
+        .container { display:flex; }
+
+        .sidebar {
+            width:220px;
+            height:calc(100vh - 60px);
+            background:#1f2937;
+            padding-top:20px;
+        }
+
+        .sidebar a {
+            display:block;
+            padding:12px 20px;
+            color:#cbd5e1;
+            text-decoration:none;
+        }
+
+        .sidebar a:hover { background:#374151; color:white; }
+        .active { background:#2563eb; color:white !important; }
+
+        .main { flex:1; padding:20px; }
+
+        .card {
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            margin-bottom:30px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        table { width:100%; border-collapse:collapse; }
+
+        th, td { padding:12px; text-align:left; }
+
+        th { background:#111827; color:white; }
+
+        tr:nth-child(even) { background:#f8fafc; }
+
+        .btn {
+            padding:6px 12px;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:12px;
+        }
+
+        .approve { background:#16a34a; color:white; }
+        .reject { background:#dc2626; color:white; }
+
+        .badge {
+            padding:5px 10px;
+            border-radius:15px;
+            font-size:12px;
+            color:white;
+        }
+
+        .approved { background:#16a34a; }
+        .rejected { background:#dc2626; }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>HOD Dashboard</h2>
+    <div>Welcome, {{ request.user.username }} | Logout</div>
+</div>
+
+<div class="container">
+
+    <div class="sidebar">
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">Escalated Leaves</a>
+        <a href="#">History</a>
+        <a href="#">Logout</a>
+    </div>
+
+    <div class="main">
+
+        <!-- Escalated Leave Queue -->
+        <div class="card">
+            <h3>Forwarded Leave Requests</h3>
+            <table>
+                <tr>
+                    <th>Student</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Reason</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for leave in escalated_leaves %}
+                <tr>
+                    <td>{{ leave.student.name }}</td>
+                    <td>{{ leave.from_date }}</td>
+                    <td>{{ leave.to_date }}</td>
+                    <td>{{ leave.reason }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'hod_approve' leave.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="btn approve">Approve</button>
+                        </form>
+
+                        <form method="POST" action="{% url 'hod_reject' leave.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="btn reject">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">No Forwarded Leaves</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- History -->
+        <div class="card">
+            <h3>Recent History</h3>
+            <table>
+                <tr>
+                    <th>Student</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Status</th>
+                </tr>
+
+                {% for leave in history_leaves %}
+                <tr>
+                    <td>{{ leave.student.name }}</td>
+                    <td>{{ leave.from_date }}</td>
+                    <td>{{ leave.to_date }}</td>
+                    <td>
+                        <span class="badge {{ leave.status|lower }}">
+                            {{ leave.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No History Found</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
