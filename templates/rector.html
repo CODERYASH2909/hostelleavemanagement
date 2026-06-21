@@ -457,9 +457,14 @@
                             <td>{{ student.enrollment_no }}</td>
                             <td>{{ student.hostel_block }} (Room {{ student.room_number }})</td>
                             <td>
+                                <a class="view-link" href="{% url 'view_student_registration' student.id %}">View Full Info</a>
                                 <form method="POST" action="{% url 'verify_student' student.id %}" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn approve">Verify</button>
+                                </form>
+                                <form method="POST" action="{% url 'reject_student' student.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn reject">Reject</button>
                                 </form>
                             </td>
                         </tr>
@@ -591,6 +596,14 @@
 
     <!-- Active Window UI/UX Switch Listener Script -->
     <script>
+        document.querySelectorAll('a[href*="/logout"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!confirm('Are you sure you want to logout?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+
         document.querySelectorAll('.sidebar a').forEach(link => {
             link.addEventListener('click', function(e) {
                 if (this.getAttribute('href') && this.getAttribute('href').includes('logout')) return;

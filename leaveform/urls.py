@@ -23,13 +23,15 @@ urlpatterns = [
     path('rector_approve/<int:id>/', views.rector_approve, name='rector_approve'),
     path('rector_reject/<int:id>/', views.rector_reject, name='rector_reject'),
     path('verify_student/<int:id>/', views.verify_student, name='verify_student'),
+    path('student_registration/<int:id>/', views.view_student_registration, name='view_student_registration'),
+    path('reject_student/<int:id>/', views.reject_student, name='reject_student'),
 
     # Proctor
     path('proctor_login/', views.proctor_login, name='proctor_login'),
     path('proctor/', views.proctor_login, name='proctor'),
     path('proctor_dashboard/', views.proctor_dashboard, name='proctor_dashboard'),
     path('proctor_approve/<int:id>/', views.proctor_approve, name='proctor_approve'),
-    path('proctor_reject/<int:id>/', views.proctor_reject, name='proctor_reject'),
+    path('proctor_forward_hod/<int:id>/', views.proctor_forward_hod, name='proctor_forward_hod'),
 
     # HOD
     path('hod_login/', views.hod_login, name='hod_login'),
